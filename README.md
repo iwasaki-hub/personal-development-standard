@@ -1,34 +1,43 @@
-# Personal Development Standard v0.2
+# Personal Development Standard v0.3
 
-GitHub Template Repository として使える、技術スタック非依存の開発標準です。
+技術スタック共通の開発規約と、新規GitHubリポジトリ向けの安全なbootstrapを提供します。
 
-## 最初にやること
-1. GitHubでこのリポジトリを作成して Settings → General → **Template repository** にチェック。
-2. 新規プロジェクトでは **Use this template** からリポジトリを作成（既存プロジェクトへは必要ファイルのみ段階的に導入）。
-3. `docs/requirements.md`, `docs/architecture.md`, `docs/deployment.md`, `docs/security.md` を実態に合わせて更新。
-4. `AGENTS.md` と `docs/development/roadmap.md` を確認し、作業を1タスク1PRに分割。
-5. 必要なら `templates/stacks/` と `templates/workflows/` のサンプルを参照し、技術別CIを追加。
-6. GitHubのBranch protection / RulesetsとEnvironment protectionを手動で有効化（ファイル配置だけでは保護は有効になりません）。
+## クイックスタート
+1. GitHub Settings → General → Template repository を有効化。
+2. **Use this template** で新しいリポジトリを作る。
+3. clone後、次を実行（既定はdry-run）：
 
-## 収録内容
-- `AGENTS.md`: Codexを含む開発エージェント共通ルール
-- `.github/workflows/standards.yml`: スタック非依存のドキュメント構造チェック
-- `.github/pull_request_template.md`: 変更内容・テスト・リスク・承認チェック
-- `.github/ISSUE_TEMPLATE/task.yml`: タスク定義フォーム
-- `docs/`: 要件、設計、セキュリティ、デプロイ、開発記録
-- `templates/stacks/`: Expo、Web、API、Supabaseの追加ガイド
-- `templates/workflows/node-ci.example.yml`: Node系プロジェクト向け任意追加CI
-- `scripts/validate-standards.sh`: ローカル検証
+```sh
+python3 scripts/bootstrap.py --project NewApp --stacks web
+python3 scripts/bootstrap.py --project NewApp --stacks web --apply
+python3 -m unittest discover -s tests -v
+bash scripts/validate-standards.sh
+```
 
-## 共通開発フロー
-Issue/要件 → 専用branch → 最小実装 → ローカルテスト → PR → CI/Preview/実機 → 人間レビュー → Merge → 承認付き公開 → 記録。
+4. 生成された`project.config.json`と`.github/workflows/stack-ci.yml`を確認し、プロジェクトのnpm scriptsや各種設定を整える。
+5. docsのTODOを埋め、専用branchでPRを作る。CIを確認して、人間がマージを決定。
+6. GitHub Rulesets/Branch protection、Environment保護を各リポジトリで設定（ファイルのコピーでは自動適用されない）。
 
-## 重要な境界
-- デフォルトでは**デプロイ、マージ、DB migration実行を自動化しない**。
-- 既存repoへの導入では、現在のCIやAGENTS.mdを上書きしない。
-- テストの実施は実際の実行結果でのみ「成功」と記載する。
-- CIが通っただけで機能やセキュリティ全体の確認が済んだとはみなさない。
+## v0.3 の4本柱
+- **GitHub保護**: `docs/github-protection.md`, `config/github/main-ruleset.example.json`
+- **CI選択**: `docs/ci-selection.md`, `scripts/bootstrap.py` （Web/Expo/API/Supabase）
+- **Codex共通プロンプト**: `docs/codex/task-execution-prompt.md`
+- **初期化**: `docs/bootstrap.md`, `tests/test_bootstrap.py`
 
-## 設計方針
-『安全な反復は自動化、公開・権限・データ破壊は人間の判断』を基本とします。
-詳細は `docs/development/working-agreement.md` と `docs/development/adoption-checklist.md` を参照。
+## 既存の共通ルール
+- `AGENTS.md`: 1タスク1PR、main直push禁止、危険操作の事前承認
+- `.github/workflows/standards.yml`: 共通ファイル構造 + bootstrap tests
+- `.github/ISSUE_TEMPLATE/task.yml`, `.github/pull_request_template.md`
+- `docs/requirements.md`, `docs/architecture.md`, `docs/security.md`, `docs/deployment.md`
+- `docs/development/`: ロードマップ、ADR、タスク、運用、導入チェックリスト
+- `templates/stacks/`, `templates/workflows/`: 技術別ガイドとサンプル
+
+## 制約と重要事項
+- `--apply`は**新規の設定ファイルをローカル生成するだけ**。push、merge、Production、DB更新、EAS Updateは行わない。
+- 既存`project.config.json`、`stack-ci.yml`があるときは上書きを拒否。
+- stack CIは対象のnpm scriptsを要求し、未実装ならCI失敗になる。Supabaseは静的レビュー案内のみで、RLS/SQLの安全性を保証しない。
+- 既存プロジェクトにはそのまま一括適用しない。専用PRで差分を段階的に移す。
+- GitHub Rulesets/Branch protectionの**実際の強制力**はアカウントプラン・権限と各リポジトリの設定に依存し、設定ファイルの追加だけでは有効にならない。
+- 自動デプロイは組み込まない。人間の承認を必須にする。
+
+詳細: `docs/bootstrap.md`, `docs/ci-selection.md`, `docs/github-protection.md`, `docs/codex/task-execution-prompt.md`。
