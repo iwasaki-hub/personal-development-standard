@@ -16,3 +16,5 @@ jobs:
         uses: actions/checkout@v4
       - name: Validate standard files
         run: bash scripts/validate-standards.sh
+      - name: Test bootstrap
+        run: python3 -m unittest discover -s tests -v
