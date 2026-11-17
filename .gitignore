@@ -1,0 +1,21 @@
+# secrets
+.env
+.env.*
+!.env.example
+!.env.*.example
+*.pem
+*.key
+
+# dependencies & caches
+node_modules/
+.expo/
+.next/
+dist/
+build/
+coverage/
+*.log
+.DS_Store
+
+# local tools
+.vscode/
+.idea/

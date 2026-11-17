@@ -1,0 +1,33 @@
+name: Implementation task
+description: 1タスク1PRの実装依頼
+labels: [task]
+body:
+  - type: textarea
+    id: goal
+    attributes:
+      label: 目的・背景
+    validations:
+      required: true
+  - type: textarea
+    id: scope
+    attributes:
+      label: 変更範囲 / 対象外
+      placeholder: 対象ファイル、変更しない領域
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: 受け入れ条件
+      placeholder: チェック可能な条件を箇条書きで
+    validations:
+      required: true
+  - type: textarea
+    id: tests
+    attributes:
+      label: 検証方法
+      placeholder: lint / typecheck / tests / preview / device
+  - type: textarea
+    id: risks
+    attributes:
+      label: リスク・事前承認が必要な操作
