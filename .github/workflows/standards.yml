@@ -16,5 +16,5 @@ jobs:
         uses: actions/checkout@v4
       - name: Validate standard files
         run: bash scripts/validate-standards.sh
-      - name: Test bootstrap
+      - name: Test bootstrap and GitHub protection
         run: python3 -m unittest discover -s tests -v
