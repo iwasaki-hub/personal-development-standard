@@ -57,7 +57,7 @@ def make_ruleset(check):
 
 
 def validate_repo(repo):
-    if not re.fullmatch(r"[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+", repo):
+    if not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_.-]*/[A-Za-z0-9][A-Za-z0-9_.-]*", repo) or ".." in repo:
         raise ProtectionError("Expected --repo OWNER/REPOSITORY")
 
 
